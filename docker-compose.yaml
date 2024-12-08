@@ -10,10 +10,8 @@ services:
   loki:
     image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
-    ports:
-      - "3100"
     healthcheck:
-      test: [ "CMD", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -27,11 +25,12 @@ services:
     command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     ports:
       - "12345:12345"
+      - "514:514/udp"
     networks:
       - loki
 
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     entrypoint:
       - sh
       - -euc
@@ -40,16 +39,14 @@ services:
         mkdir -p /data/loki-ruler && \
         minio server /data
     environment:
-      - MINIO_ROOT_USER=loki
-      - MINIO_ROOT_PASSWORD=supersecret
-      - MINIO_PROMETHEUS_AUTH_TYPE=public
-      - MINIO_UPDATE=off
-    ports:
-      - "9000"
+      MINIO_ROOT_USER: loki
+      MINIO_ROOT_PASSWORD: supersecret
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+      MINIO_UPDATE: off
     volumes:
       - minio-data:/data
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 15s
       timeout: 20s
       retries: 5
@@ -59,9 +56,9 @@ services:
   grafana:
     image: grafana/grafana:latest
     environment:
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
     entrypoint:
       - sh
       - -euc
@@ -70,21 +67,21 @@ services:
         cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
         apiVersion: 1
         datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            orgId: 1
-            url: http://loki:3100
-            basicAuth: false
-            isDefault: true
-            version: 1
-            editable: false
+        - name: Loki
+          type: loki
+          access: proxy 
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
         EOF
         /run.sh
     ports:
       - "3000:3000"
     healthcheck:
-      test: [ "CMD", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
