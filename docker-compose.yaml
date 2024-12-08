@@ -6,7 +6,7 @@ networks:
 services:
   loki:
     image: grafana/loki:latest
-    command: "-config.file=/etc/loki/config.yaml -target=read"
+    command: -config.file=/etc/loki/local-config.yaml
     ports:
       - "3100"
     healthcheck:
