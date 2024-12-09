@@ -24,7 +24,6 @@ services:
       - ./alloy-syslog-config.alloy:/etc/alloy/config.alloy:ro
     command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     ports:
-      - "12345:12345"
       - "514:514/udp"
     networks:
       - loki
@@ -78,8 +77,6 @@ services:
           editable: false
         EOF
         /run.sh
-    ports:
-      - "3000:3000"
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
       interval: 10s
