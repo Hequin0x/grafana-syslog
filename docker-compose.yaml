@@ -3,7 +3,7 @@ networks:
 
 volumes:
   minio-data: {}
-  grafana_data: {}
+  grafana-data: {}
 
 services:
   loki:
