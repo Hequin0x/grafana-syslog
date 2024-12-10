@@ -15,13 +15,14 @@ schema_config:
 common:
   replication_factor: 1
   path_prefix: ${LOKI_PATH_PREFIX}
-  s3:
-    endpoint: minio:9000
-    insecure: true
-    bucketnames: ${LOKI_S3_DATA_BUCKET_NAME}
-    access_key_id: ${MINIO_USER}
-    secret_access_key: ${MINIO_PASSWORD}
-    s3forcepathstyle: true
+  storage:
+    s3:
+      bucketnames: ${LOKI_S3_DATA_BUCKET_NAME}
+      endpoint: minio:9000
+      insecure: true
+      access_key_id: ${MINIO_USER}
+      secret_access_key: ${MINIO_PASSWORD}
+      s3forcepathstyle: true
   ring:
     kvstore:
       store: inmemory
