@@ -74,6 +74,8 @@ services:
     restart: unless-stopped
     volumes:
       - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
     environment:
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
       GF_AUTH_ANONYMOUS_ENABLED: "true"
