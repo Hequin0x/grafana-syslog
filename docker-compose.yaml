@@ -7,6 +7,7 @@ volumes:
 services:
   loki:
     image: grafana/loki:latest
+    restart: unless-stopped
     command: -config.file=/etc/loki/config.yaml -config.expand-env=true
     environment:
       LOKI_PATH_PREFIX: ${LOKI_PATH_PREFIX}
@@ -29,6 +30,7 @@ services:
 
   alloy:
     image: grafana/alloy:latest
+    restart: unless-stopped
     volumes:
       - ./alloy-syslog-config.alloy:/etc/alloy/config.alloy:ro
     command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
@@ -39,6 +41,7 @@ services:
 
   minio:
     image: minio/minio:latest
+    restart: unless-stopped
     entrypoint:
       - sh
       - -euc
@@ -63,6 +66,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    restart: unless-stopped
     environment:
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
       GF_AUTH_ANONYMOUS_ENABLED: "true"
