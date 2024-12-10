@@ -3,6 +3,7 @@ networks:
 
 volumes:
   minio-data: {}
+  grafana_data: {}
 
 services:
   loki:
@@ -20,6 +21,8 @@ services:
       MINIO_PASSWORD: ${MINIO_PASSWORD}
     volumes:
       - ./loki-config.yaml:/etc/loki/config.yaml:ro
+    depends_on:
+      - minio
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
       interval: 10s
@@ -33,6 +36,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./alloy-syslog-config.alloy:/etc/alloy/config.alloy:ro
+    depends_on:
+      - loki
     command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
     ports:
       - "514:514/udp"
@@ -67,6 +72,8 @@ services:
   grafana:
     image: grafana/grafana:latest
     restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
     environment:
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
       GF_AUTH_ANONYMOUS_ENABLED: "true"
