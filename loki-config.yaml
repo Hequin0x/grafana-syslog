@@ -20,8 +20,8 @@ common:
       bucketnames: ${LOKI_S3_DATA_BUCKET_NAME}
       endpoint: minio:9000
       insecure: true
-      access_key_id: ${MINIO_USER}
-      secret_access_key: ${MINIO_PASSWORD}
+      access_key_id: ${MINIO_ROOT_USER}
+      secret_access_key: ${MINIO_ROOT_PASSWORD}
       s3forcepathstyle: true
   ring:
     kvstore:

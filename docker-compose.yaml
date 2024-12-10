@@ -17,8 +17,8 @@ services:
       LOKI_COMPACTOR_WORKING_DIR: ${LOKI_COMPACTOR_WORKING_DIR}
       LOKI_COMPACTOR_RETENTION_ENABLED: ${LOKI_COMPACTOR_RETENTION_ENABLED}
       LOKI_COMPACTOR_RETENTION_PERIOD: ${LOKI_COMPACTOR_RETENTION_PERIOD}
-      MINIO_USER: ${MINIO_USER}
-      MINIO_PASSWORD: ${MINIO_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - ./loki-config.yaml:/etc/loki/config.yaml:ro
     depends_on:
@@ -55,8 +55,8 @@ services:
         mkdir -p /data/loki-ruler && \
         minio server /data
     environment:
-      MINIO_ROOT_USER: ${MINIO_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       MINIO_PROMETHEUS_AUTH_TYPE: public
       MINIO_UPDATE: off
     volumes:
@@ -78,7 +78,7 @@ services:
       - loki
     environment:
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: ${GF_AUTH_ANONYMOUS_ENABLED}
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
     entrypoint:
       - sh
