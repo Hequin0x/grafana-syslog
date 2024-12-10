@@ -3,10 +3,29 @@ loki.source.syslog "local" {
     address = "0.0.0.0:514"
     protocol = "udp"
     syslog_format = "rfc3164"
-    labels = { job = "syslog", component = "loki.source.syslog", protocol = "udp" }
+    labels = {
+      job = "syslog",
+      component = "loki.source.syslog",
+      protocol = "udp"
+    }
   }
 
   forward_to = [loki.write.local.receiver]
+  relabel_rules = discovery.relabel.syslog.rules
+}
+
+discovery.relabel "syslog" {
+    targets = []
+
+    rule {
+        source_labels = ["__syslog_message_hostname"]
+        target_label  = "host"
+    }
+
+    rule {
+        source_labels = ["__syslog_message_severity"]
+        target_label  = "level"
+    }
 }
 
 loki.write "local" {
