@@ -14,14 +14,14 @@ schema_config:
 
 common:
   replication_factor: 1
-  path_prefix: ${LOKI_PATH_PREFIX}
+  path_prefix: /loki
   storage:
     s3:
-      bucketnames: ${LOKI_S3_DATA_BUCKET_NAME}
+      bucketnames: loki-data
       endpoint: minio:9000
       insecure: true
-      access_key_id: ${MINIO_ROOT_USER}
-      secret_access_key: ${MINIO_ROOT_PASSWORD}
+      access_key_id: loki
+      secret_access_key: changeme
       s3forcepathstyle: true
   ring:
     kvstore:
@@ -30,12 +30,12 @@ common:
 ruler:
   storage:
     s3:
-      bucketnames: ${LOKI_S3_RULER_BUCKET_NAME}
+      bucketnames: loki-ruler
 
 compactor:
-  working_directory: ${LOKI_COMPACTOR_WORKING_DIR}
-  retention_enabled: ${LOKI_COMPACTOR_RETENTION_ENABLED}
+  working_directory: /tmp/compactor
+  retention_enabled: true
   delete_request_store: s3
 
 limits_config:
-  retention_period: ${LOKI_COMPACTOR_RETENTION_PERIOD}
+  retention_period: 336h

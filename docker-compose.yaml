@@ -9,16 +9,7 @@ services:
   loki:
     image: grafana/loki:3.3.1
     restart: unless-stopped
-    command: -config.file=/etc/loki/config.yaml -config.expand-env=true
-    environment:
-      LOKI_PATH_PREFIX: ${LOKI_PATH_PREFIX}
-      LOKI_S3_DATA_BUCKET_NAME: ${LOKI_S3_DATA_BUCKET_NAME}
-      LOKI_S3_RULER_BUCKET_NAME: ${LOKI_S3_RULER_BUCKET_NAME}
-      LOKI_COMPACTOR_WORKING_DIR: ${LOKI_COMPACTOR_WORKING_DIR}
-      LOKI_COMPACTOR_RETENTION_ENABLED: ${LOKI_COMPACTOR_RETENTION_ENABLED}
-      LOKI_COMPACTOR_RETENTION_PERIOD: ${LOKI_COMPACTOR_RETENTION_PERIOD}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: -config.file=/etc/loki/config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/config.yaml:ro
     depends_on:
@@ -55,8 +46,8 @@ services:
         mkdir -p /data/loki-ruler && \
         minio server /data
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: loki
+      MINIO_ROOT_PASSWORD: changeme
       MINIO_PROMETHEUS_AUTH_TYPE: public
       MINIO_UPDATE: off
     volumes:
@@ -78,7 +69,7 @@ services:
       - loki
     environment:
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
-      GF_AUTH_ANONYMOUS_ENABLED: ${GF_AUTH_ANONYMOUS_ENABLED}
+      GF_AUTH_ANONYMOUS_ENABLED: true
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
     entrypoint:
       - sh
