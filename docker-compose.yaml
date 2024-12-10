@@ -73,7 +73,7 @@ services:
     image: grafana/grafana:latest
     restart: unless-stopped
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
     depends_on:
       - loki
     environment:
