@@ -32,4 +32,9 @@ ruler:
       bucketnames: loki-ruler
 
 compactor:
-  working_directory: /tmp/loki/compactor
+  working_directory: /tmp/compactor
+  retention_enabled: true
+  delete_request_store: s3
+
+limits_config:
+  retention_period: 336h # 14 days
