@@ -38,8 +38,8 @@ services:
         mkdir -p /data/loki-ruler && \
         minio server /data
     environment:
-      MINIO_ROOT_USER: loki
-      MINIO_ROOT_PASSWORD: supersecret
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
       MINIO_PROMETHEUS_AUTH_TYPE: public
       MINIO_UPDATE: off
     volumes:
