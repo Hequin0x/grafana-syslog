@@ -7,6 +7,31 @@ loki.source.syslog "local" {
   }
 
   forward_to = [loki.write.local.receiver]
+  relabel_rules = discovery.relabel.syslog.rules
+}
+
+discovery.relabel "syslog" {
+  targets = []
+
+  rule {
+    source_labels = ["__syslog_message_severity"]
+    target_label  = "severity"
+  }
+
+  rule {
+    source_labels = ["__syslog_message_facility"]
+    target_label  = "facility"
+  }
+
+  rule {
+    source_labels = ["__syslog_message_hostname"]
+    target_label  = "hostname"
+  }
+
+  rule {
+    source_labels = ["__syslog_message_app_name"]
+    target_label  = "application"
+  }
 }
 
 loki.write "local" {
