@@ -7,7 +7,7 @@ volumes:
 
 services:
   loki:
-    image: grafana/loki:3.3.2
+    image: grafana/loki:3.4.2
     restart: unless-stopped
     command: -config.file=/etc/loki/config.yaml
     volumes:
@@ -24,7 +24,7 @@ services:
       - loki
 
   alloy:
-    image: grafana/alloy:v1.6.1
+    image: grafana/alloy:v1.7.5
     restart: unless-stopped
     volumes:
       - ./config/alloy/syslog-config.alloy:/etc/alloy/config.alloy:ro
@@ -38,7 +38,7 @@ services:
       - loki
 
   minio:
-    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    image: minio/minio:RELEASE.2025-03-12T18-04-18Z
     restart: unless-stopped
     entrypoint:
       - sh
@@ -63,7 +63,7 @@ services:
       - loki
 
   grafana:
-    image: grafana/grafana:11.5.1
+    image: grafana/grafana:11.6.0
     restart: unless-stopped
     volumes:
       - ./config/grafana/datasources:/etc/grafana/provisioning/datasources:ro
