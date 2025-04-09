@@ -24,7 +24,7 @@ services:
       - loki
 
   alloy:
-    image: grafana/alloy:v1.7.5
+    image: grafana/alloy:v1.8.0
     restart: unless-stopped
     volumes:
       - ./config/alloy/syslog-config.alloy:/etc/alloy/config.alloy:ro
